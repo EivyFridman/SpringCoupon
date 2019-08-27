@@ -3,7 +3,10 @@ package com.johnbryce.springCoupon.service;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.johnbryce.springCoupon.beans.Company;
 import com.johnbryce.springCoupon.beans.Customer;
@@ -14,6 +17,8 @@ import com.johnbryce.springCoupon.repository.CompanyRepository;
 import com.johnbryce.springCoupon.repository.CustomerRepository;
 import com.johnbryce.springCoupon.utils.DataBase;
 
+@Service
+@Transactional
 public class AdminService implements CouponClientService{
 
 	
