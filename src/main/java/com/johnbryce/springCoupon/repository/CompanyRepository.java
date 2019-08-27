@@ -8,8 +8,6 @@ public interface  CompanyRepository extends JpaRepository<Company, Long> {
 	
 	Company findByNameAndPassword(String name, String password);
 
-	void deleteCompanyById(int companyId);
-
-	Company findByName(String name);
+	boolean findByNameIsNull(String compName);
 
 }

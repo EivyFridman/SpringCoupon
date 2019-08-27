@@ -8,11 +8,7 @@ import com.johnbryce.springCoupon.beans.Customer;
 
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Integer> {
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-	void deleteCustomerById(int customerId);
-
-	Customer findByNameAndPassword(String name, String password);
-
-	Customer findByName(String name);
+	boolean findByNameIsNull(String custName);
 }
