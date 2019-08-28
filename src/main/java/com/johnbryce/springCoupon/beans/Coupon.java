@@ -55,12 +55,9 @@ public class Coupon {
 	@Column(nullable = false)
 	private String image;
 	
-	@ManyToOne
+	//@ManyToOne
 	private Company company;
-//	
-//	@ManyToMany(mappedBy = "coupons")
-//	private List<Customer> customers;
-	
+
 }
 
 

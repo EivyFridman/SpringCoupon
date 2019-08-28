@@ -1,6 +1,6 @@
-package com.johnbryce.springCoupon.service;
+package com.johnbryce.springCoupon.facad;
 
-public interface CouponClientService {
+public interface CouponClientFacad {
 
 	/**
 	 * in this class we have method that check by name & password and we use it
@@ -10,6 +10,6 @@ public interface CouponClientService {
 	 * @return
 	 * @throws Exception 
 	 */
-	public CouponClientService login(String name, String password) throws Exception;
+	public CouponClientFacad login(String name, String password) throws Exception;
 
 }

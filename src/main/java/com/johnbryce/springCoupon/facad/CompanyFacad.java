@@ -1,4 +1,4 @@
-package com.johnbryce.springCoupon.service;
+package com.johnbryce.springCoupon.facad;
 
 import java.sql.Date;
 import java.util.List;
@@ -21,17 +21,17 @@ import com.johnbryce.springCoupon.repository.CouponRepository;
 import com.johnbryce.springCoupon.utils.Utile;
 
 @Service
-public class CompanyService implements CouponClientService {
+public class CompanyFacad implements CouponClientFacad {
 	@Autowired
 	private CouponRepository couponRepository;
 	@Autowired
 	private CompanyRepository companyRepository;
 	
 	private Company company;
-	Logger logger = LoggerFactory.getLogger(CompanyService.class);
+	Logger logger = LoggerFactory.getLogger(CompanyFacad.class);
 
 	@Override
-	public CouponClientService login(String name, String password) throws Exception {
+	public CouponClientFacad login(String name, String password) throws Exception {
 		company = companyRepository.findByNameAndPassword(name, password);
 		if (company != null) {
 			return this;

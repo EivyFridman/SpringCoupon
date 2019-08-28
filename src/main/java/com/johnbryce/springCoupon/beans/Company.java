@@ -36,4 +36,10 @@ public class Company {
 	
     @OneToMany(cascade=CascadeType.PERSIST)
 	private List<Coupon> coupons;
+    
+    public Company(String name,String password,String email) {
+    	setName(name);
+    	setPassword(password);
+    	setEmail(email);
+    }
 }

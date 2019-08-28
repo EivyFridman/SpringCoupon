@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 
 import lombok.AllArgsConstructor;
@@ -31,7 +32,7 @@ public class Customer {
 	@Column(nullable = false)
 	private String password;
 
-	@ManyToMany
+	@OneToMany
 	private List<Coupon> coupons;
 
 }

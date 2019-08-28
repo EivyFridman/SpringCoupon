@@ -1,4 +1,4 @@
-package com.johnbryce.springCoupon.service;
+package com.johnbryce.springCoupon.facad;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -19,7 +19,7 @@ import com.johnbryce.springCoupon.utils.DataBase;
 
 @Service
 @Transactional
-public class AdminService implements CouponClientService{
+public class AdminFacad implements CouponClientFacad{
 
 	
 	private static final String ADMIN_USER_NAME = "admin";
@@ -37,8 +37,8 @@ public class AdminService implements CouponClientService{
 	 * @param password  String
 	 *
 	 */
-	public CouponClientService login(String name, String password) {
-		if (name.equals(AdminService.ADMIN_USER_NAME) && password.equals(AdminService.ADMIN_PASSWORD)) {
+	public CouponClientFacad login(String name, String password) {
+		if (name.equals(AdminFacad.ADMIN_USER_NAME) && password.equals(AdminFacad.ADMIN_PASSWORD)) {
 			return this;
 		}
 		return null;
