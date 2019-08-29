@@ -1,4 +1,4 @@
-package com.johnbryce.springCoupon.facad;
+package com.johnbryce.springCoupon.facade;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.aspectj.internal.lang.annotation.ajcDeclareAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ import com.johnbryce.springCoupon.utils.DataBase;
 
 @Service
 @Transactional
-public class AdminFacad implements CouponClientFacad{
+public class AdminFacade implements CouponClientFacade{
 
 	
 	private static final String ADMIN_USER_NAME = "admin";
@@ -39,8 +38,8 @@ public class AdminFacad implements CouponClientFacad{
 	 * @param password  String
 	 *
 	 */
-	public CouponClientFacad login(String name, String password) {
-		if (name.equals(AdminFacad.ADMIN_USER_NAME) && password.equals(AdminFacad.ADMIN_PASSWORD)) {
+	public CouponClientFacade login(String name, String password) {
+		if (name.equals(AdminFacade.ADMIN_USER_NAME) && password.equals(AdminFacade.ADMIN_PASSWORD)) {
 			return this;
 		}
 		return null;
@@ -209,8 +208,9 @@ public class AdminFacad implements CouponClientFacad{
 	 * @param id
 	 * @return
 	 */
-	public Optional<Customer> getCustomer(long id){
-		return customerRepository.findById(id);
+	public Customer getCustomer(long id){
+		Optional<Customer> customer = customerRepository.findById(id);
+		return customer.isPresent()? customer.get() : null;
 	}
 
 	public void rebuildDb() throws CouponException, RemoveException, SQLException, CreateException {

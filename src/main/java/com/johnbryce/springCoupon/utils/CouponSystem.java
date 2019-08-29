@@ -4,10 +4,10 @@ import java.sql.Connection;
 
 import com.johnbryce.springCoupon.exception.CouponException;
 import com.johnbryce.springCoupon.exception.DailyCouponException;
-import com.johnbryce.springCoupon.facad.AdminFacad;
-import com.johnbryce.springCoupon.facad.CompanyFacad;
-import com.johnbryce.springCoupon.facad.CouponClientFacad;
-import com.johnbryce.springCoupon.facad.CustomerFacad;
+import com.johnbryce.springCoupon.facade.AdminFacade;
+import com.johnbryce.springCoupon.facade.CompanyFacade;
+import com.johnbryce.springCoupon.facade.CouponClientFacade;
+import com.johnbryce.springCoupon.facade.CustomerFacade;
 
 /**
  * @author Eivy & MICHAL
@@ -61,18 +61,18 @@ public class CouponSystem {
 	 * @return
 	 * @throws Exception
 	 */
-	public static CouponClientFacad login(String name, String password, ClientType clientType) throws Exception {
-		CouponClientFacad couponClientService = null;
+	public static CouponClientFacade login(String name, String password, ClientType clientType) throws Exception {
+		CouponClientFacade couponClientService = null;
 
 		switch (clientType) {
 		case ADMIN:	
-			couponClientService = new AdminFacad();
+			couponClientService = new AdminFacade();
 			break;
 		case COMPANY:
-			couponClientService = new CompanyFacad();
+			couponClientService = new CompanyFacade();
 			break;
 		case CUSTOMER:
-			couponClientService = new CustomerFacad();
+			couponClientService = new CustomerFacade();
 			break;
 		default:
 			throw new CouponException("login failed");

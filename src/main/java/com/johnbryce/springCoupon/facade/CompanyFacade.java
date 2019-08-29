@@ -1,9 +1,9 @@
-package com.johnbryce.springCoupon.facad;
+package com.johnbryce.springCoupon.facade;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -21,17 +21,17 @@ import com.johnbryce.springCoupon.repository.CouponRepository;
 import com.johnbryce.springCoupon.utils.Utile;
 
 @Service
-public class CompanyFacad implements CouponClientFacad {
+public class CompanyFacade implements CouponClientFacade {
 	@Autowired
 	private CouponRepository couponRepository;
 	@Autowired
 	private CompanyRepository companyRepository;
 	
 	private Company company;
-	Logger logger = LoggerFactory.getLogger(CompanyFacad.class);
+	Logger logger = LoggerFactory.getLogger(CompanyFacade.class);
 
 	@Override
-	public CouponClientFacad login(String name, String password) throws Exception {
+	public CouponClientFacade login(String name, String password) throws Exception {
 		company = companyRepository.findByNameAndPassword(name, password);
 		if (company != null) {
 			return this;
@@ -54,7 +54,7 @@ public class CompanyFacad implements CouponClientFacad {
 							coupon = couponRepository.save(coupon);
 							return coupon;
 						} else {
-							throw new CouponException("Coupon Title is Already Exists! Create New Coupon is Canceled!");
+							throw new CouponException("Coupon Title Already Exists! Create New Coupon is Canceled!");
 						}
 					} else {
 						throw new CouponException("invalid coupon start time is in the past");
@@ -131,8 +131,37 @@ public class CompanyFacad implements CouponClientFacad {
 		return company.getCoupons();
 	}
 
-	public Set<Coupon> getAllCouponsByType(CouponType coupType) {
-		return null;
+	public List<Coupon> getAllCouponsByType(CouponType coupType) {
+		List<Coupon> list = new ArrayList<Coupon>();
+		List<Coupon> allCouponsList = company.getCoupons();
+		for (Coupon coupon : allCouponsList) {
+			if (coupon.getCategory().equals(coupType)) {
+				list.add(coupon);
+			}
+		}
+		return list;
+	}
+	
+	public List<Coupon> getCouponsByMaxCouponPrice(double price) {
+		List<Coupon> list = new ArrayList<Coupon>();
+		List<Coupon> allCouponsList = company.getCoupons();
+		for (Coupon coupon : allCouponsList) {
+			if (coupon.getPrice() <= price) {
+				list.add(coupon);
+			}
+		}
+		return list;
+	}
+
+	public List<Coupon> getCouponsByMaxCouponDate(Date endDate) throws Exception {
+		List<Coupon> list = new ArrayList<Coupon>();
+		List<Coupon> allCouponsList = company.getCoupons();
+		for (Coupon coupon : allCouponsList) {
+			if (coupon.getEndDate().equals(endDate) || coupon.getEndDate().before(endDate)) {
+				list.add(coupon);
+			}
+		}
+		return list;
 	}
 
 }
