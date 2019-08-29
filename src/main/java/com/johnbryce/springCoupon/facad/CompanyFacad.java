@@ -75,7 +75,7 @@ public class CompanyFacad implements CouponClientFacad {
 		Optional<Coupon> findById = couponRepository.findById(coupId);
 		if (coupId > 0 || findById.isPresent()) {
 			if (company.getCoupons().contains(findById.get())) {
-				couponRepository.delete(coupId);
+				couponRepository.deleteById(coupId);
 			} else {
 				throw new CouponException("cannot delete coupon  that doesn't belog to the company");
 			}

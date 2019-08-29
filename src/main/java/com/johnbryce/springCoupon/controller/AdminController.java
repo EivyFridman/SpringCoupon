@@ -4,10 +4,11 @@ import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,82 +24,78 @@ import com.johnbryce.springCoupon.utils.CouponSystem;
 @RequestMapping("/admin/")
 public class AdminController {
 	
-	@Autowired
-	AdminFacad adminService;
-	
 	@PostConstruct
 	public void Init() {
-		adminService.login("admin", "1234");
+		
 		try {
-			adminService.createCompany(new Company("comapny","company","Company@com.com"));
-			adminService.createCompany(new Company("coca-cola","1234","main@cocacola.com"));
-			adminService.createCompany(new Company("pepsi","5678","costomers@pepsi.com"));
-		} catch (CouponException e) {
+			AdminFacad admin = (AdminFacad)CouponSystem.login("admin", "1234", ClientType.ADMIN);
+			admin.createCompany(new Company("comapny","company","Company@com.com"));
+			admin.createCompany(new Company("coca-cola","1234","main@cocacola.com"));
+			admin.createCompany(new Company("pepsi","5678","costomers@pepsi.com"));
+		} catch (Exception e) {
 			System.out.println("Failed to init ...");
 		}
 		
 	}
 	
 	@PostMapping("/createCompany")
-	public ResponseEntity<?> createCompany(@RequestBody Company company)  {
+	public ResponseEntity<?> createCompany(Company company)  {
 		try {
-			return new ResponseEntity<Company> (adminService.createCompany(company),HttpStatus.OK);
-		} catch (CouponException e) {
+			AdminFacad admin = (AdminFacad)CouponSystem.login("admin", "1234", ClientType.ADMIN);
+			return new ResponseEntity<Company> (admin.createCompany(company),HttpStatus.OK);
+		} catch (Exception e) {
 			return new ResponseEntity<String> (e.getMessage(),HttpStatus.PRECONDITION_REQUIRED); 
 		}
 	}
 
 
-//	@DELETE
-//	@Path("removeCompany/{companyId}")
-//	@Produces(MediaType.TEXT_PLAIN)
-//	public String removeCompany(@PathParam("companyId") long id) throws Exception {
-//		AdminFacad admin = (AdminFacad)CouponSystem.login("admin", "1234", ClientType.ADMIN);
-//		//AdminFacad admin = getFacade();
-//		try {
-//			Company company = admin.getCompany(id);
-//			if (company != null) {
-//				System.out.println("delete company id");
-//				admin.removeCompany(company);
-//				System.out.println(company);
-//				return "Succeded to remove a company: name = " + company.getCompName() + ", id = " + id;
-//			} else {
-//				return "Failed to remove a company: the provided company id is invalid";
-//			}
-//		} catch (CouponException e) {
-//			return "Failed to remove a company: " + e.getMessage();
-//		}
-//
-//	}
-//
-//	@POST
-//	@Path("updateCompany")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public String updateCompany(Company newCompany) throws Exception {
-//		AdminFacad admin = (AdminFacad)CouponSystem.login("admin", "1234", ClientType.ADMIN);
-//		//AdminFacad admin = getFacade();
-//		try {
-//			Company oldCompany = admin.getCompany(newCompany.getCompanyId());
-//			System.out.println("before update componay "+ oldCompany);
-//			if (oldCompany != null) {
-//				newCompany = admin.updateCompany(oldCompany, newCompany.getPassword(), newCompany.getEmail());
-//				System.out.println("after update componay "+ newCompany);
-//				return new Gson().toJson(newCompany);
-//			} else {
-//				return "Failed to update a company: the provided company id is invalid";
-//			}
-//		} catch (CouponException e) {
-//			return "Failed to update a company: " + e.getMessage();
-//		}
-//
-//	}
+	@DeleteMapping("/removeCompany/{companyId}")
+	public ResponseEntity<String> removeCompany(@PathVariable long id) throws Exception {
+		AdminFacad admin = (AdminFacad)CouponSystem.login("admin", "1234", ClientType.ADMIN);
+		//AdminFacad admin = getFacade();
+		try {
+			Company company = admin.getCompany(id);
+			if (company != null) {
+				admin.removeCompany(company);
+				return new ResponseEntity<String> ("Succeded to remove a company: name = " + company.getName() + ", id = " + id,HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String> ("Failed to remove a company: the provided company id is invalid",HttpStatus.BAD_REQUEST);
+			}
+		} catch (CouponException e) {
+			return new ResponseEntity<String> ("Failed to remove a company: " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	@PostMapping("/updateCompany")
+	public ResponseEntity<?> updateCompany(Company newCompany) {
+		
+		//AdminFacad admin = getFacade();
+		try {
+			AdminFacad admin = (AdminFacad)CouponSystem.login("admin", "1234", ClientType.ADMIN);
+			Company oldCompany = admin.getCompany(newCompany.getId());
+			if (oldCompany != null) {
+				newCompany = admin.updateCompany(oldCompany, newCompany.getPassword(), newCompany.getEmail());
+				return new ResponseEntity<Company> (admin.createCompany(newCompany),HttpStatus.OK);
+				} else {
+					return new ResponseEntity<String> ("Failed to Update a company: the provided company id is invalid",HttpStatus.BAD_REQUEST);
+			}
+		} catch ( Exception e) {
+			return new ResponseEntity<String> ("Failed to update a company: " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
 
 	@GetMapping("/getAllCompanies")
-	public Collection<Company> getAllCompanies() throws Exception {
-		//AdminFacad admin = getFacade();
-		AdminFacad admin = (AdminFacad)CouponSystem.login("admin", "1234", ClientType.ADMIN);
-		return admin.getAllCompanies();
+	public Collection<Company> getAllCompanies() {
+		try {
+			AdminFacad admin = (AdminFacad)CouponSystem.login("admin", "1234", ClientType.ADMIN);
+			return admin.getAllCompanies();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 	}
 

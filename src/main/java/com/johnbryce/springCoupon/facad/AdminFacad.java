@@ -2,9 +2,11 @@ package com.johnbryce.springCoupon.facad;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.aspectj.internal.lang.annotation.ajcDeclareAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -115,7 +117,8 @@ public class AdminFacad implements CouponClientFacad{
 	 * @return
 	 */
 	public Company getCompany(long id) throws CouponException {
-			return companyRepository.findOne(id);
+			Optional<Company> company = companyRepository.findById(id);
+			return company.isPresent()? company.get() : null;
 	}
 
 	/**
@@ -206,8 +209,8 @@ public class AdminFacad implements CouponClientFacad{
 	 * @param id
 	 * @return
 	 */
-	public Customer getCustomer(long id){
-		return customerRepository.findOne(id);
+	public Optional<Customer> getCustomer(long id){
+		return customerRepository.findById(id);
 	}
 
 	public void rebuildDb() throws CouponException, RemoveException, SQLException, CreateException {
