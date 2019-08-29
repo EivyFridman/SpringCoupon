@@ -1,8 +1,11 @@
 package com.johnbryce.springCoupon.controller;
 
+import java.util.Collection;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.johnbryce.springCoupon.beans.Company;
 import com.johnbryce.springCoupon.beans.Coupon;
+import com.johnbryce.springCoupon.beans.CouponType;
 import com.johnbryce.springCoupon.facade.CompanyFacade;
 import com.johnbryce.springCoupon.utils.ClientType;
 import com.johnbryce.springCoupon.utils.CouponSystem;
@@ -26,8 +30,7 @@ public class CompanyController {
 			CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
 			return new ResponseEntity<Coupon>(companyFacade.createCoupon(coupon), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<String>("Failed to create a couponS: " + e.getMessage(),
-					HttpStatus.PRECONDITION_REQUIRED);
+			return new ResponseEntity<String>("Failed to create a couponS: " + e.getMessage(),HttpStatus.PRECONDITION_REQUIRED);
 		}
 
 	}
@@ -42,16 +45,14 @@ public class CompanyController {
 				return new ResponseEntity<String>(
 						"Succeded to remove a coupon: name = " + coupon.getTitle() + ", id = " + id, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>("Failed to remove a coupon: the provided coupon id is invalid",
-						HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>("Failed to remove a coupon: the provided coupon id is invalid",HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			return new ResponseEntity<String>("Failed to remove a coupon: " + e.getMessage(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>("Failed to remove a coupon: " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	// TODO chekc what are the fileds that should be updated (only)
+	// TODO check what are the fields that should be updated (only)
 	@PutMapping("/updateCoupon")
 	public ResponseEntity<?> updateCoupon(Coupon coupon) {
 		try {
@@ -69,85 +70,61 @@ public class CompanyController {
 				coupon = companyFacade.updateCoupon(oldCoupon);
 				return new ResponseEntity<Coupon>(coupon, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>(
-						"Failed to Update a coupon: the provided coupon does not exist in the system",
-						HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>("Failed to Update a coupon: the provided coupon does not exist in the system",HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			return new ResponseEntity<String>("Failed to update a coupon: " + e.getMessage(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>("Failed to update a coupon: " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-//	@GET
-//	@Path("getCompany")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public String getCompany() {
-//		CompanyFacade companyFacade = getFacade();
-//		Company company;
-//		try {
-//			company = companyFacade.getCompany();
-//		} catch (Exception e) {
-//			System.err.println("Get Company failed: " + e.getMessage());
-//			company = new Company();
-//		}
-//
-//		return new Gson().toJson(company);
-//	}
-//
-//	@GET
-//	@Path("getCoupon/{couponId}")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public String getCoupon(@PathParam("couponId") long id) throws Exception {
-//		CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
-//		//CompanyFacade companyFacade = getFacade();
-//		try {
-//			Coupon coupon = companyFacade.getCoupon(id);
-//			if (coupon != null) {
-//				return new Gson().toJson(coupon);
-//			} else {
-//				return null;
-//			}
-//		} catch (Exception e) {
-//			System.err.println("get coupon by id failed " + e.getMessage());
-//			return null;
-//		}
-//	}
-//
-//	@GET
-//	@Path("getCoupons")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public String getCoupons() throws Exception {
-//		CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
-//		// CompanyFacade companyFacade = getFacade();
-//		Set<Coupon> coupons;
-//
-//		try {
-//			coupons = company.getCoupons();
-//			System.out.println(coupons);
-//		} catch (Exception e) {
-//			System.err.println("Get Coupons failed: " + e.getMessage());
-//			coupons = new HashSet<Coupon>();
-//		}
-//		return new Gson().toJson(coupons);
-//	}
-//
-//	@GET
-//	@Produces(MediaType.APPLICATION_JSON)
-//	@Path("/getAllCouponsByType/{type}")
-//	public String getAllCouponsByType(@PathParam("type") CouponType type) throws Exception {
-//		CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
-//		// CompanyFacade companyFacade = getFacade();
-//		Set<Coupon> allCouponsByType = new HashSet<>();
-//		try {
-//			allCouponsByType = company.getAllCouponsByType(type);
-//		} catch (Exception e) {
-//			System.err.println("Get Coupons by type failed: " + e.getMessage());
-//			allCouponsByType = new HashSet<Coupon>();
-//		}
-//		return new Gson().toJson(allCouponsByType);
-//	}
-//
+	@GetMapping("/getCompany")
+	public ResponseEntity<?> getCompany() {
+		try {
+			CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
+			return new ResponseEntity<Company>(companyFacade.getCompany(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("Get Company failed: " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/getCoupon/{couponId}")
+	public ResponseEntity<?> getCoupon(@PathVariable long id){
+		//CompanyFacade companyFacade = getFacade();
+		try {
+			CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
+			Coupon coupon = companyFacade.getCoupon(id);
+			if (coupon != null) {
+				return new ResponseEntity<Coupon> (coupon,HttpStatus.OK);
+				} else {
+					return new ResponseEntity<String> ("Failed get the coupon datails : the provided coupon id is invalid",HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<String> ("Failed to get the coupon: " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/getCoupons")
+	public ResponseEntity<?> getCoupons(){
+		// CompanyFacade companyFacade = getFacade();
+		try {
+			CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
+			return new ResponseEntity<Collection<Coupon>> (companyFacade.getCoupons(),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String> ("Failed to get all coupons: " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/getAllCouponsByType/{type}")
+	public ResponseEntity<?> getAllCouponsByType(@PathVariable CouponType type) {
+		// CompanyFacade companyFacade = getFacade();
+		try {
+			CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
+			return new ResponseEntity<Collection<Coupon>> (companyFacade.getAllCouponsByType(type),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String> ("Failed to get all coupons of type"+type+" : " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 //	@GET
 //	@Produces(MediaType.APPLICATION_JSON)
 //	@Path("/getCouponsByMaxCouponPrice/{price}")
