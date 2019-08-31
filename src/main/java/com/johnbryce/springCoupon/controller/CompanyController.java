@@ -1,5 +1,6 @@
 package com.johnbryce.springCoupon.controller;
 
+import java.sql.Date;
 import java.util.Collection;
 
 import org.springframework.http.HttpStatus;
@@ -125,36 +126,28 @@ public class CompanyController {
 		}
 	}
 
-//	@GET
-//	@Produces(MediaType.APPLICATION_JSON)
-//	@Path("/getCouponsByMaxCouponPrice/{price}")
-//	public String getCouponsByMaxCouponPrice(@PathParam("price") double price) throws Exception {
-//		CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
-//		//CompanyFacade companyFacade = getFacade();
-//		Set<Coupon> allCouponsByType = new HashSet<>();
-//		try {
-//			allCouponsByType = companyFacade.getCouponsByMaxCouponPrice(price);
-//		} catch (Exception e) {
-//			System.err.println("Get Coupons by max price failed: " + e.getMessage());
-//			allCouponsByType = new HashSet<Coupon>();
-//		}
-//		return new Gson().toJson(allCouponsByType);
-//	}
-//
-//	@GET
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Path("/getCouponsByMaxCouponDate/{date}")
-//	public String getCouponsByMaxCouponDate(@PathParam("date") Date date) throws Exception {
-//		CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
-//		//CompanyFacade companyFacade = getFacade();
-//		Set<Coupon> allCouponsByType = new HashSet<>();
-//		try {
-//			allCouponsByType = companyFacade.getCouponsByMaxCouponDate(date);
-//		} catch (Exception e) {
-//			System.err.println("Get Coupons by max dare failed: " + e.getMessage());
-//			allCouponsByType = new HashSet<Coupon>();
-//		}
-//		return new Gson().toJson(allCouponsByType);
-//	}
+	@GetMapping("/getCouponsByMaxCouponPrice/{price}")
+	public ResponseEntity<?> getCouponsByMaxCouponPrice(@PathVariable double price)  {
+		
+		//CompanyFacade companyFacade = getFacade();
+		try {
+			CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
+			return new ResponseEntity<Collection<Coupon>> (companyFacade.getCouponsByMaxCouponPrice(price),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String> ("Failed to get all coupons of max price "+price+" : " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/getCouponsByMaxCouponDate/{date}")
+	public ResponseEntity<?> getCouponsByMaxCouponDate(@PathVariable Date date){
+		
+		//CompanyFacade companyFacade = getFacade();
+		try {
+			CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
+			return new ResponseEntity<Collection<Coupon>> (companyFacade.getCouponsByMaxCouponDate(date),HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String> ("Failed to get all coupons of max sate "+date+" : " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 }

@@ -52,6 +52,8 @@ public class CompanyFacade implements CouponClientFacade {
 					if (startDate.getTime() >= Utile.getCurrentDate().getTime()) {
 						if (couponRepository.findByTitle(CoupTitle).isEmpty()/* == null */) {
 							coupon = couponRepository.save(coupon);
+							company.getCoupons().add(coupon);
+							companyRepository.save(company);
 							return coupon;
 						} else {
 							throw new CouponException("Coupon Title Already Exists! Create New Coupon is Canceled!");
@@ -75,6 +77,7 @@ public class CompanyFacade implements CouponClientFacade {
 		Optional<Coupon> findById = couponRepository.findById(coupId);
 		if (coupId > 0 || findById.isPresent()) {
 			if (company.getCoupons().contains(findById.get())) {
+				company.getCoupons().remove(findById.get());
 				couponRepository.deleteById(coupId);
 			} else {
 				throw new CouponException("cannot delete coupon  that doesn't belog to the company");
