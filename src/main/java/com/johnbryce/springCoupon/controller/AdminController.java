@@ -32,7 +32,7 @@ public class AdminController {
 			admin.createCompany(new Company("coca-cola","1234","main@cocacola.com"));
 			admin.createCompany(new Company("pepsi","5678","costomers@pepsi.com"));
 		} catch (Exception e) {
-			System.out.println("Failed to init ...");
+			System.out.println("Failed to init admin ...");
 		}
 		
 	}

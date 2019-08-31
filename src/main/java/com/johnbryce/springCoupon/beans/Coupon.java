@@ -1,6 +1,7 @@
 package com.johnbryce.springCoupon.beans;
 
 import java.sql.Date;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 
 public class Coupon {
 	
+
 	@Id
 	@GeneratedValue
 	private int id;
@@ -35,24 +37,31 @@ public class Coupon {
 	@Column(nullable = false)
 	private int amount;
 	
-	@Basic(optional = false)
 	@Column(nullable = false)
 	private CouponType category;
 
-	@Basic(optional = false)
 	@Column(nullable = false)
 	private String message;
 
-	@Basic(optional = false)
 	@Column(nullable = false)
 	private double price;
 
-	@Basic(optional = false)
-	@Column(nullable = false)
+	@Column
 	private String image;
 	
 	//@ManyToOne
 	private Company company;
+	
+	public Coupon(String title, Date startDate, Date endDate, int amount, CouponType type, String message,double price,String Image) {
+		setTitle(title);
+		setStartDate(startDate);
+		setEndDate(endDate);
+		setAmount(amount);
+		setCategory(type);
+		setMessage(message);
+		setPrice(price);
+		setImage(Image);
+	}
 
 }
 

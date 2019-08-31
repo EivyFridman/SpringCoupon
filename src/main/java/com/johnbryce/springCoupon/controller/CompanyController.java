@@ -3,6 +3,8 @@ package com.johnbryce.springCoupon.controller;
 import java.sql.Date;
 import java.util.Collection;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +25,18 @@ import com.johnbryce.springCoupon.utils.CouponSystem;
 @RestController
 @RequestMapping("/company")
 public class CompanyController {
+	
+	@PostConstruct
+	public void Init() {	
+		try {
+			CompanyFacade companyFacade = (CompanyFacade) CouponSystem.login("company", "company", ClientType.COMPANY);
+			companyFacade.createCoupon(new Coupon("i1",new Date(2019,9,15), new Date(2019,10,15), 3, CouponType.FOOD, "m1",10,""));
+			companyFacade.createCoupon(new Coupon("i2",new Date(2019,9,15), new Date(2019,9,25), 4, CouponType.FOOD, "m2",20,""));
+			companyFacade.createCoupon(new Coupon("i3",new Date(2019,9,15), new Date(2019,9,15), 5, CouponType.FOOD, "m3",30,""));
+		} catch (Exception e) {
+			System.out.println("Failed to init company ...");
+		}
+	}
 
 	@PostMapping("/createCoupon")
 	public ResponseEntity<?> createCoupon(Coupon coupon) {
